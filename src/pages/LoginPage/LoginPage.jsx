@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-
+import loginImg from '../../assets/login2.png'
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -45,7 +45,8 @@ const LoginPage = () => {
             {/* 이미지 컬럼 */}
             <Col md={12} className="d-flex justify-content-center">
                 <img
-                    src="login.jpeg"
+                    // src="login.jpeg"
+                    src={loginImg}
                     alt="Login"
                     className="image-login"
                     style={{ width: '100%', height: '400px', objectPosition: 'top 50%', objectFit: 'cover' }}
