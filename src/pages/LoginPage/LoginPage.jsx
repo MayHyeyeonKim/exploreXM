@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import loginImage from '../../assets/login3.png';
+import loginImage from '../../assets/login4.png';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
