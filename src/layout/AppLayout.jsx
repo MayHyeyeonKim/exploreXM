@@ -28,14 +28,14 @@ const AppLayout = () => {
           <Navbar.Toggle aria-controls="navbarScroll" className="navbar-icon" />
           <Navbar.Collapse id="navbarScroll">
             {/* Menu Items */}
-            <Nav className="me-auto my-2 my-lg-0 gap-3" navbarScroll>
+            <Nav className="me-auto my-2 my-lg-0 gap-3 px-4" navbarScroll>
               <Nav.Link as={Link} to="/">
                 Home
               </Nav.Link>
               <Nav.Link as={Link} to="/about">
                 About
               </Nav.Link>
-              <Nav.Link as={Link} to="/activities">
+              {/* <Nav.Link as={Link} to="/activities">
                 Activities
               </Nav.Link>
               <Nav.Link as={Link} to="/hotels">
@@ -43,11 +43,11 @@ const AppLayout = () => {
               </Nav.Link>
               <Nav.Link as={Link} to="/flights" disabled>
                 Flights
-              </Nav.Link>
+              </Nav.Link> */}
             </Nav>
 
             {/* Login */}
-            <Nav className="ms-auto gap-3">
+            <Nav className="ms-auto gap-3 px-4">
               {!user ? (
                 <Nav.Link as={Link} to="/login">
                   Sign in
