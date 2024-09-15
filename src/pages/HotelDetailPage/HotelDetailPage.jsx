@@ -1,9 +1,7 @@
-import React, { useState, useRef } from "react";
-import { useNavigate, useLocation, useParams } from "react-router-dom";
+import React, { useState, useRef, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useHotelDetailsQuery } from "../../hooks/useFetchHotelDetails";
 // 컴포넌트들
-import ImportantInformation from "./components/HotelImportantInformation/HotelImportantInformation";
-import FacilitiesNService from "./components/HotelFacilitiesNService/HotelFacilitiesNService";
 import TermsOfUse from "./components/HotelTermsOfUse/HotelTermsOfUse";
 import FreqeuntAskedQuestions from "./components/HotelFrequentAskedQuestions/FreqeuntAskedQuestions";
 import HotelReview from "./components/HotelReviewList/HotelReviewList";
@@ -16,35 +14,40 @@ import "./HotelDetailPage.style.css";
 import SearchBar from "../../common/SearchBar/SearchBar";
 import HotelOverview from "./components/HotelOverview/HotelOverview";
 import HotelInfo from "./components/HotelInfo/HotelInfo";
-import { useHotelsByGeoData } from '../../hooks/useFetchHotelsByGeoData';
+import { useHotelsByGeoData } from "../../hooks/useFetchHotelsByGeoData";
+import Spinner from "../../common/Spinner/Spinner";
 
 const HotelDetailPage = () => {
-  const location = useLocation();
-  const { dateFrom, dateTo, adultNum, photos, reviewScore } = location.state || {};
+  const navigate = useNavigate();
+  const selectedHotel = JSON.parse(localStorage.getItem("hotel") || null);
+  const adultNum = parseInt(localStorage.getItem("adultNum"));
+
   const { id } = useParams();
+  useEffect(() => {
+    if (!selectedHotel || selectedHotel.id.toString() !== id) {
+      navigate("/");
+    }
+  }, [selectedHotel, id, navigate]);
+
   const { data, isLoading, error, isError } = useHotelDetailsQuery({
     hotelId: id,
-    dateFrom,
-    dateTo,
-    adultNum,
+    dateFrom: selectedHotel?.checkinDate,
+    dateTo: selectedHotel?.checkoutDate,
+    adultNum: adultNum,
   });
 
   const { data: hotelsGeoData } = useHotelsByGeoData({
     geoData: { latitude: data?.latitude, longitude: data?.longitude },
     radius: 20,
-    dateFrom,
-    dateTo,
+    dateFrom: selectedHotel?.checkinDate,
+    dateTo: selectedHotel?.checkoutDate,
   });
-
-  // 사진 모달을 위함
-  const [showModal, setShowModal] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
 
   const homeRef = useRef();
   const infoRef = useRef();
   const reviewRef = useRef();
   const faqRef = useRef();
-
+  console.log("home", faqRef);
   const handleSelect = (key) => {
     switch (key) {
       case "info-n-rates":
@@ -63,15 +66,21 @@ const HotelDetailPage = () => {
   };
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return <Spinner />;
   }
+
   if (isError) {
     return <h1>{error.message}</h1>;
   }
 
   return (
     <div>
-      <SearchBar dateFrom={dateFrom} dateTo={dateTo} adultNum={adultNum} />
+      <SearchBar
+        dateFrom={selectedHotel?.checkinDate}
+        dateTo={selectedHotel?.checkoutDate}
+        adultNum={adultNum}
+        style={{ position: 'relative', zIndex: 10 }} 
+      />
       <div className="tabs-container">
         <Tabs
           onSelect={handleSelect}
@@ -79,30 +88,34 @@ const HotelDetailPage = () => {
           className="mb-3"
           fill
         >
-          <Tab eventKey="home" title="Hotel Overview"></Tab>
-          <Tab eventKey="info-n-rates" title="Info & rates"></Tab>
-          <Tab eventKey="reviews" title="Customer Reviews"></Tab>
-          <Tab eventKey="faq" title="Frequent Asked Questions"></Tab>
+          <Tab eventKey="home" title="Overview"></Tab>
+          <Tab eventKey="info-n-rates" title="Rooms"></Tab>
+          <Tab eventKey="reviews" title="Reviews"></Tab>
+          <Tab eventKey="faq" title="Policies"></Tab>
         </Tabs>
       </div>
 
       <HotelOverview
         homeRef={homeRef}
-        reviewScore={reviewScore}
+        reviewScore={selectedHotel?.reviewScore}
         data={data}
         hotelsGeoData={hotelsGeoData}
-        photos={photos}
+        photos={selectedHotel?.photoUrls}
+        reviewRef={reviewRef}
+        faqRef={faqRef}
       />
 
-      <HotelReview hotelId={data.hotel_id} reviewRef={reviewRef}/>
+      <HotelInfo
+        data={data}
+        infoRef={infoRef}
+        adultNum={adultNum}
+        reviewScore={selectedHotel?.reviewScore}
+      />
+      <HotelReview hotelId={data?.hotel_id} reviewRef={reviewRef} />
+
+      <TermsOfUse data={data} faqRef={faqRef} />
+      <FreqeuntAskedQuestions />
       <AdvertisingBanner />
-
-      <HotelInfo data={data} infoRef={infoRef} adultNum={adultNum} />
-      <TermsOfUse data={data} />
-
-      
-
-      <FreqeuntAskedQuestions faqRef={faqRef}/>
     </div>
   );
 };

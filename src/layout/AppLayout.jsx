@@ -4,27 +4,23 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import Footer from "../pages/components/Footer/Footer";
 import "./AppLayout.style.css";
+import logo from "./exploreX.png";
 
 const AppLayout = () => {
   const navigate = useNavigate();
   const user = localStorage.getItem("user");
 
   const handleLogout = () => {
-    localStorage.clear("user");
+    localStorage.clear();
     navigate("/");
   };
   return (
-    <Container className="app-container">
+    <Container className="app-container ">
       <Navbar expand="lg" className="navbar-container">
         <Container fluid>
-          {/* <Navbar.Brand href="/" >
-            <img
-              height={30}
-              className="m-1"
-              src="https://static.vecteezy.com/system/resources/previews/017/396/814/original/netflix-mobile-application-logo-free-png.png"
-              alt="logo"
-            />
-          </Navbar.Brand> */}
+          <Navbar.Brand href="/" className="">
+            <img height={50} className="" src={logo} alt="logo" />
+          </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarScroll" className="navbar-icon" />
           <Navbar.Collapse id="navbarScroll">
             {/* Menu Items */}
@@ -54,7 +50,7 @@ const AppLayout = () => {
                 </Nav.Link>
               ) : (
                 // <Button className='logout-btn'> Logout </Button>
-                <Nav.Link as={Link} onClick={handleLogout}>
+                <Nav.Link as={Link} to="/" onClick={handleLogout}>
                   Sign out
                 </Nav.Link>
               )}

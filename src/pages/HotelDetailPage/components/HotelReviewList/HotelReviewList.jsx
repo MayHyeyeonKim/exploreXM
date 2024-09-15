@@ -6,9 +6,10 @@ import Carousel from "react-multi-carousel";
 import { responsive } from "../../../../utils/settings/hotelReviewSliderSetting";
 import "./HotelReviewList.style.css";
 import HotelReviewScore from "./components/HotelReviewScore";
+import Spinner from "../../../../common/Spinner/Spinner";
 
 const HotelReviewList = ({ hotelId, reviewRef }) => {
-  const [sortOption, setSortOption] = useState("sort_most_relevant");
+  const [sortOption, setSortOption] = useState("sort_score_desc");
   const { data, isLoading, error, isError } = useHotelReviewQuery({
     hotelId,
     sortOption,
@@ -23,16 +24,16 @@ const HotelReviewList = ({ hotelId, reviewRef }) => {
   }, [filteredData]);
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return <Spinner />;
   }
+
   if (isError) {
     return <h1>{error.message}</h1>;
   }
   return (
     <div ref={reviewRef}  style={{paddingTop:"80px"}}>
-      <h3 style={{color: "black"}}>Hotel Review</h3>
       <div className="m-2">
-        <div className="fs-5 fw-bold">Guest reviews</div>
+        <div className="fs-4 fw-bold">Guest reviews</div>
       </div>
       <HotelReviewScore hotelId={hotelId} reviewCount={data.count} />
       <div className="fw-semibold m-2">Guest who stayed here loved</div>
@@ -45,7 +46,7 @@ const HotelReviewList = ({ hotelId, reviewRef }) => {
         containerClass={"carousel-container"}
         responsive={responsive}
       >
-        {filteredData?.map((review, index) => (
+        {filteredData.length > 0 && filteredData?.map((review, index) => (
           <HotelReviewCard review={review} key={index} />
         ))}
       </Carousel>

@@ -9,16 +9,11 @@ const HotelCard = ({ hotel, adultNum }) => {
   const hotelImg = hotel.photoUrls[0].replace("square60", "square300"); // photo size adjusted
   const { currency, value } = hotel?.priceBreakdown?.grossPrice;
   const goToDetail = () => {
-    navigate(`./${hotel.id}`, {
-      state: {
-        dateFrom: hotel.checkinDate,
-        dateTo: hotel.checkoutDate,
-        adultNum: adultNum,
-        photos: hotel.photoUrls,
-        reviewScore: hotel.reviewScore
-      },
-    });
+    localStorage.setItem("hotel", JSON.stringify(hotel));
+    localStorage.setItem("adultNum", adultNum)
+    navigate(`./${hotel.id}`);
   };
+
 
   const handleSave = () => {
     let savedHotels = JSON.parse(localStorage.getItem("savedHotels")) || [];
@@ -31,7 +26,7 @@ const HotelCard = ({ hotel, adultNum }) => {
   return (
     <div
       className="p-2 m-2 gap-3 hotelCard-container"
-      style={{ border: "1px solid black" }}
+      style={{ border: "1px solid black", width: "100%"}}
     >
       <Row className="flex-grow-1">
         <Col lg={5}>
@@ -44,7 +39,7 @@ const HotelCard = ({ hotel, adultNum }) => {
               onClick={() => handleSave()}
             />
             <div className="w-100 mt-2 mb-2 hotelCard-title position-relative">
-              <div className="fs-3 fw-bold">{hotel?.name}</div>
+              <div className="fs-4 fw-bold">{hotel?.name.length>20? hotel.name.slice(0,25) + "..." :hotel.name}</div>
             </div>
 
             <div className="d-flex align-items-center">
