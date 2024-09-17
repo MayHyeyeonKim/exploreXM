@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useHotelsByKeywordQuery } from "../../hooks/useFetchHotelsByKeyword";
 import HotelCard from "./components/HotelCard/HotelCard";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Container, Row, Col, Form } from "react-bootstrap";
 import SearchBar from "../../common/SearchBar/SearchBar";
 import MapPreview from "../HotelDetailPage/components/HotelMap/MapPreview";
 import Pagination from "../HomePage/components/Pagination/Pagination";
 import Spinner from "../../common/Spinner/Spinner";
+
 const itemsPerPage = 20;
 
-
 const HotelPage = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const [pageNum, setPageNum] = useState(1);
   const [totalHotels, setTotalHotels] = useState(0);
@@ -52,6 +53,10 @@ const HotelPage = () => {
     setPageNum(1); // 정렬 기준 변경 시 첫 페이지로 리셋
   }, [sortBy]);
 
+  if (data && data.hotels.length === 0){
+    navigate("/")
+  }
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -68,7 +73,7 @@ const HotelPage = () => {
   };
 
   const handleSortChange = (e) => {
-    console.log(e.target.value)
+    console.log(e.target.value);
     setSortBy(e.target.value); // 정렬 기준 변경
   };
 
@@ -99,24 +104,27 @@ const HotelPage = () => {
         <Row className="">
           <Col xs={{ order: 1 }} md={{ span: 8, order: 2 }}>
             <div className="d-flex flex-column gap-2">
-              {data?.hotels?.map((hotel, index) => (
-                <HotelCard
-                  hotel={hotel?.property}
-                  adultNum={adultNum}
-                  keyword={keyword}
-                  key={index}
-                />
-              ))}
+              {data && data.hotels.length > 0 ? data.hotels.map((hotel, index) => (
+                    <HotelCard
+                      hotel={hotel.property}
+                      adultNum={adultNum}
+                      keyword={keyword}
+                      key={index}
+                    />
+                  )):(
+                    <h3 style={{textAlign:"center"}}>No hotels found.</h3>
+                  )}
             </div>
           </Col>
-          <Col xs={{ order: 0 }} md={{ span: 4, order: 1 }} className="py-2">
+        {data && data.hotels.length > 0 && (
+            <Col xs={{ order: 0 }} md={{ span: 4, order: 1 }} className="py-2">
             <MapPreview
-              hotel={data.hotels[0]?.property}
-              hotelsGeoData={data.hotels.map((hotel) => hotel.property)}
+              hotel={data?.hotels[0]?.property}
+              hotelsGeoData={data?.hotels.map((hotel) => hotel?.property)}
               city={keyword}
-              
             />
           </Col>
+        )}
         </Row>
       </Container>
 
