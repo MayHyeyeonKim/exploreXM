@@ -1,4 +1,7 @@
-# ExploreX
+# ExploreX - 🏆 97.1K YouTube Competition 3rd Place Winner 🏆
+
+**🏆 97.1K YouTube Competition 3rd Place Winner 🏆** - 
+[Link to the YouTube Channel](https://www.youtube.com/@%EC%BD%94%EB%94%A9%EC%95%8C%EB%A0%A4%EC%A3%BC%EB%8A%94%EB%88%84%EB%82%98)
 
 ExploreX is a travel booking and activity management platform built using React. This project was developed by a team of five as a group project. The application integrates multiple APIs to provide users with seamless hotel searches, activity browsing, and personalized trip management, all in one place.
 
