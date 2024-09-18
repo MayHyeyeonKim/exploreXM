@@ -6,7 +6,7 @@ ExploreX is a travel booking and activity management platform built using React.
 ![ExploreX Demo](./src/assets/Demo.gif)
 
 ## Team Repo & Demo
-> https://github.com/ExploreX-App/ExploreX
+> https://github.com/ExploreX-App/ExploreX <br/>
 > https://explorex-9.netlify.app/
 
 ## Features
